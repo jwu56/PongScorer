@@ -11,9 +11,9 @@ scores and team names on another device, so I decided to build one.
 - Allows server to add and remove points from teams
 - Allows server to change team names
 # Roadmap and future features
-[ ] Show who is currently serving
-[ ] Show current round
-[ ] Allow multiple scorers
-[ ] Allow manual override of the player that is currently serving
-[ ] Show when a player has won
-[ ] Allow configuration of winning point number
+- [ ] Show who is currently serving
+- [ ] Show current round
+- [ ] Allow multiple scorers
+- [ ] Allow manual override of the player that is currently serving
+- [ ] Show when a player has won
+- [ ] Allow configuration of winning point number
