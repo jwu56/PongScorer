@@ -1,1 +1,0 @@
-{"team1":"Torchic","team2":"Zhical","team1score":3,"team2score":4}
