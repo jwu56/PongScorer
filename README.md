@@ -5,8 +5,8 @@ scores and team names on another device, so I decided to build one.
 # Instructions
 1. Put client.php and server.php into HTDocs on a web server
 2. Run apache
-3. Open http://<IP Address>/client.php on the device that is displaying the scoreboard.
-4. Open http://<IP Address>/server.php on the device that is scoring.
+3. Open `http://<IP Address>/client.php` on the device that is displaying the scoreboard.
+4. Open `http://<IP Address>/server.php` on the device that is scoring.
 # Feature List
 - Allows server to add and remove points from teams
 - Allows server to change team names
