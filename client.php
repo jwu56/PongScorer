@@ -26,6 +26,7 @@ if(!isset($_SESSION["pairing_code"])) {
     $data["team2"] = "Team 2";
     $data["team1score"] = 0;
     $data["team2score"] = 0;
+    $data["team"] = 0;
 }
 else {
     $pairing_code = $_SESSION["pairing_code"];
@@ -70,6 +71,7 @@ else {
             min-height: 100vh;
         }
         #roundnumber {
+            z-index: 1;
             padding: 0;
             margin: 0;
         }
@@ -78,7 +80,7 @@ else {
             transform:translateX(50%);
             position: fixed;
             width: 50%;
-            z-index: 200;
+            z-index: 2;
             background-color: white;
             padding: 0;
         }
@@ -113,6 +115,9 @@ else {
             padding-left: 20px;
             padding-right: 20px;
             border: 0.5px solid black;
+        }
+        #roundsummary {
+            filter:blur(4px);
         }
 
         form > input {

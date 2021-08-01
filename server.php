@@ -33,9 +33,10 @@ else {
             $GLOBALS["data"]["team"]=0;
         }
         if(!isset($_SESSION["servebit"])) {
-            $_SESSION["servebit"]=0;
+            $_SESSION["servebit"]=1;
         }
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            var_dump($_SESSION["servebit"]);
             if ($_POST['t1name']!="") {
                 $GLOBALS["data"]["team1"] = $_POST["t1name"];
             }
@@ -55,12 +56,12 @@ else {
             if ($_POST['team1remove']=="true") {
                 if (!$GLOBALS["data"]["team1score"]==0) {
                     $GLOBALS["data"]["team1score"] = $GLOBALS["data"]["team1score"] - 1;
-                    if ($_SESSION["servebit"]<=1) {
-                        $_SESSION["servebit"]--;
+                    if ($_SESSION["servebit"]==0) {
+                        $_SESSION["servebit"]++;
                     }
                     else {
                         changeteam($GLOBALS["data"]);
-                        $_SESSION["servebit"]++;
+                        $_SESSION["servebit"]--;
                     }
                 }
             }
@@ -77,14 +78,22 @@ else {
             if ($_POST['team2remove']=="true") {
                 if (!$GLOBALS["data"]["team2score"]==0) {
                     $GLOBALS["data"]["team2score"] = $GLOBALS["data"]["team2score"] - 1;
-                    if ($_SESSION["servebit"]<=1) {
-                        $_SESSION["servebit"]--;
+                    if ($_SESSION["servebit"]==0) {
+                        $_SESSION["servebit"]++;
                     }
                     else {
                         changeteam($GLOBALS["data"]);
-                        $_SESSION["servebit"]++;
+                        $_SESSION["servebit"]--;
                     }
                 }
+            }
+            if ($_POST["resetgame"]=="true") {
+                $GLOBALS["data"]["team1"] = "Team 1";
+                $GLOBALS["data"]["team2"] = "Team 2";
+                $GLOBALS["data"]["team1score"] = 0;
+                $GLOBALS["data"]["team2score"] = 0;
+                $GLOBALS["data"]["team"] = 0;
+                $_SESSION["servebit"]=0;
             }
             $globalvars[$pairing_code] = $GLOBALS["data"];
         }
@@ -97,6 +106,7 @@ else {
         $GLOBALS["data"]["team2"] = "Team 2";
         $GLOBALS["data"]["team1score"] = 0;
         $GLOBALS["data"]["team2score"] = 0;
+        $GLOBALS["data"]["team"] = 0;
     }
 
     function changeteam() {
@@ -136,7 +146,10 @@ else {
             function submitform() {
                 document.getElementById("assignmentform").submit();
             }
-
+            function resetgamefn() {
+                document.getElementById("resetgame").value="true";
+                document.getElementById("assignmentform").submit();
+            }
         </script>
     </head>
     <body>
@@ -151,6 +164,8 @@ else {
             <input type="hidden" id="team2add" name="team2add" value=""/>
             <button onclick="team2removefn()">Take 1 point from <?php echo $GLOBALS["data"]["team2"]?></button>
             <input type="hidden" id="team2remove" name="team2remove" value=""/>
+            <button onclick="resetgamefn()">Reset Game</button>
+            <input type="hidden" id="resetgame" name="resetgame" value=""/>
         </form>
     <p>Pairing Code: <?php echo $pairing_code?></p>
     </body>
