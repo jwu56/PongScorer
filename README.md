@@ -17,3 +17,6 @@ scores and team names on another device, so I decided to build one.
 - [ ] Allow manual override of the player that is currently serving
 - [ ] Show when a player has won
 - [ ] Allow configuration of winning point number
+- [ ] Allow multiple games to go at once
+- [ ] Switch from storing data to data.txt into using PHP Sessions and pairing
+- [ ] Allow an "Audit Log" - the reasons points have been taken or added
