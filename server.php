@@ -1,7 +1,31 @@
 <?php
-    $data=[];
-    if(file_exists("data.txt")) {
-        $data = json_decode(file_get_contents("data.txt"),true);
+session_start();
+$globalvars = array();
+if (file_exists("globalvars.json")) {
+    $globalvars = json_decode(file_get_contents("globalvars.json"),true);
+}
+if (!isset($_SESSION["pairing_code"])) {
+    while (True) {
+        $pairing_code = random_int(100000, 999999);
+        if (isset($globalvars["pairing_codes"])) {
+            if (in_array($pairing_code, $globalvars["pairing_codes"])) {
+                //Do nothing
+            } else {
+                array_push($globalvars["pairing_codes"], $pairing_code);
+                break;
+            }
+        } else {
+            $globalvars["pairing_codes"] = array();
+        }
+    }
+}
+else {
+    $pairing_code = $_SESSION["pairing_code"];
+}
+
+$_SESSION["pairing_code"] = $pairing_code;
+    if(isset($globalvars[$pairing_code])) {
+        $data = $globalvars[$pairing_code];
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($_POST['t1name']!="") {
                 $data["team1"] = $_POST["t1name"];
@@ -31,10 +55,10 @@
                     $data["team2score"] = $data["team2score"] - 1;
                 }
             }
-            file_put_contents("data.txt", json_encode($data));
+            $globalvars[$pairing_code] = $data;
         }
         else {
-            $data = json_decode(file_get_contents("data.txt"),true);
+            $data = $globalvars[$pairing_code];
         }
     }
     else {
@@ -42,8 +66,9 @@
         $data["team2"] = "Team 2";
         $data["team1score"] = 0;
         $data["team2score"] = 0;
-        file_put_contents("data.txt",json_encode($data));
+        $globalvars[$pairing_code] = $data;
     }
+    file_put_contents("globalvars.json",json_encode($globalvars));
 ?>
 <html>
     <head>
@@ -87,5 +112,6 @@
             <button onclick="team2removefn()">Take 1 point from <?php echo $data["team2"]?></button>
             <input type="hidden" id="team2remove" name="team2remove" value=""/>
         </form>
+    <p>Pairing Code: <?php echo $pairing_code?></p>
     </body>
 </html>
