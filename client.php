@@ -37,6 +37,7 @@ else {
     ?>
 <!DOCTYPE HTML>
 <head>
+    <title>PongScoreboard</title>
     <meta name="apple-mobile-web-app-title" content="PongScoreboard">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="white">

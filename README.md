@@ -18,5 +18,5 @@ scores and team names on another device, so I decided to build one.
 - [ ] Show when a player has won
 - [x] Allow multiple games to go at once
 - [x] Switch from storing data to data.txt into using PHP Sessions and pairing
-- [x] Allow an "Audit Log" - the reasons points have been taken or added
+- [ ] Allow an "Audit Log" - the reasons points have been taken or added
 - [ ] Add text-to-speech commentator announcements
