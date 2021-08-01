@@ -28,85 +28,86 @@ else {
     $pairing_code = $_SESSION["pairing_code"];
 }
     if(isset($globalvars[$pairing_code])) {
-        $data = $globalvars[$pairing_code];
-        if(!isset($data['team'])) {
-            $data["team"]=0;
+        $GLOBALS["data"] = $globalvars[$pairing_code];
+        if(!isset($GLOBALS["data"]['team'])) {
+            $GLOBALS["data"]["team"]=0;
         }
         if(!isset($_SESSION["servebit"])) {
             $_SESSION["servebit"]=0;
         }
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($_POST['t1name']!="") {
-                $data["team1"] = $_POST["t1name"];
+                $GLOBALS["data"]["team1"] = $_POST["t1name"];
             }
             if ($_POST['t2name']!="") {
-                $data["team2"] = $_POST["t2name"];
+                $GLOBALS["data"]["team2"] = $_POST["t2name"];
             }
             if ($_POST['team1add']=="true") {
-                $data["team1score"]++;
+                $GLOBALS["data"]["team1score"]++;
                 if ($_SESSION["servebit"]<=1) {
                     $_SESSION["servebit"]++;
                 }
                 else {
-                    changeteam($data);
+                    changeteam($GLOBALS["data"]);
                     $_SESSION["servebit"]--;
                 }
             }
             if ($_POST['team1remove']=="true") {
-                if (!$data["team1score"]==0) {
-                    $data["team1score"] = $data["team1score"] - 1;
+                if (!$GLOBALS["data"]["team1score"]==0) {
+                    $GLOBALS["data"]["team1score"] = $GLOBALS["data"]["team1score"] - 1;
                     if ($_SESSION["servebit"]<=1) {
                         $_SESSION["servebit"]--;
                     }
                     else {
-                        changeteam($data);
+                        changeteam($GLOBALS["data"]);
                         $_SESSION["servebit"]++;
                     }
                 }
             }
             if ($_POST['team2add']=="true") {
-                $data["team2score"] = $data["team2score"] + 1;
+                $GLOBALS["data"]["team2score"] = $GLOBALS["data"]["team2score"] + 1;
                 if ($_SESSION["servebit"]<=1) {
                     $_SESSION["servebit"]++;
                 }
                 else {
-                    changeteam($data);
+                    changeteam($GLOBALS["data"]);
                     $_SESSION["servebit"]--;
                 }
             }
             if ($_POST['team2remove']=="true") {
-                if (!$data["team2score"]==0) {
-                    $data["team2score"] = $data["team2score"] - 1;
+                if (!$GLOBALS["data"]["team2score"]==0) {
+                    $GLOBALS["data"]["team2score"] = $GLOBALS["data"]["team2score"] - 1;
                     if ($_SESSION["servebit"]<=1) {
                         $_SESSION["servebit"]--;
                     }
                     else {
-                        changeteam($data);
+                        changeteam($GLOBALS["data"]);
                         $_SESSION["servebit"]++;
                     }
                 }
             }
-            $globalvars[$pairing_code] = $data;
+            $globalvars[$pairing_code] = $GLOBALS["data"];
         }
         else {
-            $data = $globalvars[$pairing_code];
+            $GLOBALS["data"] = $globalvars[$pairing_code];
         }
     }
     else {
-        $data["team1"] = "Team 1";
-        $data["team2"] = "Team 2";
-        $data["team1score"] = 0;
-        $data["team2score"] = 0;
-        $globalvars[$pairing_code] = $data;
+        $GLOBALS["data"]["team1"] = "Team 1";
+        $GLOBALS["data"]["team2"] = "Team 2";
+        $GLOBALS["data"]["team1score"] = 0;
+        $GLOBALS["data"]["team2score"] = 0;
     }
-    function changeteam($data) {
-        if ($data["team"]==0) {
-            $data["team"]=1;
+
+    function changeteam() {
+        if ($GLOBALS["data"]["team"]==0) {
+            $GLOBALS["data"]["team"]=1;
         }
         else {
-            $data["team"]=0;
+            $GLOBALS["data"]["team"]=0;
         }
     }
+    $globalvars[$pairing_code] = $GLOBALS["data"];
     file_put_contents("globalvars.json",json_encode($globalvars));
 ?>
 <html>
@@ -140,15 +141,15 @@ else {
     </head>
     <body>
         <form id="assignmentform" action="server.php" method="post">
-            <h4>Team 1 name: </h4><input onchange="submitform()" value="<?php echo $data["team1"]?>" type="text" name="t1name"/>
-            <h4>Team 2 name: </h4><input onchange="submitform()" value="<?php echo $data["team2"]?>" type="text" name="t2name"/><br/><br/>
-            <button onclick="team1addfn()">Add 1 point to <?php echo $data["team1"]?></button>
+            <h4>Team 1 name: </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team1"]?>" type="text" name="t1name"/>
+            <h4>Team 2 name: </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team2"]?>" type="text" name="t2name"/><br/><br/>
+            <button onclick="team1addfn()">Add 1 point to <?php echo $GLOBALS["data"]["team1"]?></button>
             <input type="hidden" id="team1add" name="team1add" value=""/>
-            <button onclick="team1removefn()">Take 1 point from <?php echo $data["team1"]?></button>
+            <button onclick="team1removefn()">Take 1 point from <?php echo $GLOBALS["data"]["team1"]?></button>
             <input type="hidden" id="team1remove" name="team1remove" value=""/>
-            <button onclick="team2addfn()">Add 1 point to <?php echo $data["team2"]?></button>
+            <button onclick="team2addfn()">Add 1 point to <?php echo $GLOBALS["data"]["team2"]?></button>
             <input type="hidden" id="team2add" name="team2add" value=""/>
-            <button onclick="team2removefn()">Take 1 point from <?php echo $data["team2"]?></button>
+            <button onclick="team2removefn()">Take 1 point from <?php echo $GLOBALS["data"]["team2"]?></button>
             <input type="hidden" id="team2remove" name="team2remove" value=""/>
         </form>
     <p>Pairing Code: <?php echo $pairing_code?></p>

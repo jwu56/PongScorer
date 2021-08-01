@@ -69,6 +69,19 @@ else {
         html,body,#scorediv>* {
             min-height: 100vh;
         }
+        #roundnumber {
+            padding: 0;
+            margin: 0;
+        }
+        #roundsummary {
+            text-align: center;
+            transform:translateX(50%);
+            position: fixed;
+            width: 50%;
+            z-index: 200;
+            background-color: white;
+            padding: 0;
+        }
         <?php if(!isset($pairing_code)) {?>
         #scorediv {
             filter: blur(4px);
@@ -131,8 +144,11 @@ else {
 else {?>
         <div id="round_details">
         <div id="roundsummary">
-            <h1>Round <?php echo $data["team1score"] + $data["team2score"]?></h1>
-            <h2><?php echo $data["team"]?> Serving</h2>
+            <h1 id="roundnumber">Round <?php echo $data["team1score"] + $data["team2score"] + 1?></h1>
+            <h2><?php
+                $strprefix = "team";
+                $teamno = strval($data["team"] + 1);
+                echo $data[$strprefix .= $teamno]; //Should return Team (team number)?> Serving</h2>
         </div>
         <div id="scorediv">
             <div id="team1">
@@ -179,7 +195,7 @@ else {?>
         xhttp.send();
         xhttp.addEventListener("load", refreshScoreboard);
     };
-    setInterval(reloadScore, 1000);
+    setInterval(reloadScore, 100);
 </script>
 </body>
 </html>
