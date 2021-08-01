@@ -70,6 +70,9 @@ else {
             min-height: 100vh;
         }
         <?php if(!isset($pairing_code)) {?>
+        #scorediv {
+            filter: blur(4px);
+        }
         #pairing_code {
             text-align: center;
         }
@@ -120,9 +123,35 @@ else {
             <button type="submit">Go</button>
         </form>
     </div>
+
+
     <?php }?>
+
 <?php }
 else {?>
+        <div id="round_details">
+        <div id="roundsummary">
+            <h1>Round <?php echo $data["team1score"] + $data["team2score"]?></h1>
+            <h2><?php echo $data["team"]?> Serving</h2>
+        </div>
+        <div id="scorediv">
+            <div id="team1">
+                <h1><?php echo $data["team1"]?></h1>
+                <h4><?php echo $data["team1score"]?></h4>
+            </div>
+            <div id="team2">
+                <h1><?php echo $data["team2"]?></h1>
+                <h4><?php echo $data["team2score"]?></h4>
+            </div>
+        </div>
+        </div>
+        <?php }?>
+<?php if(!isset($_GET["ajax"])) {?>
+<div id="round_details">
+    <div id="roundsummary">
+        <h1>Round <?php echo $data["team1score"] + $data["team2score"]?></h1>
+        <h2><?php echo $data["team"]?> Serving</h2>
+    </div>
     <div id="scorediv">
         <div id="team1">
             <h1><?php echo $data["team1"]?></h1>
@@ -133,19 +162,15 @@ else {?>
             <h4><?php echo $data["team2score"]?></h4>
         </div>
     </div>
-        <?php }?>
+</div>
 <script>
     function refreshScoreboard() {
-        if (document.getElementById("scorediv")!=null) {
-            if (!document.getElementById("scorediv").innerHTML == xhttp.response.replaceAll("\r","")) {
-                document.getElementById("scorediv").innerHTML = xhttp.response.replaceAll("\r","");
+        if (document.getElementById("round_details")!=undefined) {
+            if (document.getElementById("round_details").innerHTML != xhttp.response.replaceAll("\r","")) {
+                document.getElementById("round_details").innerHTML = xhttp.response.replaceAll("\r","");
+                console.log(document.getElementById("round_details").innerHTML);
+                console.log(xhttp.response);
             }
-        }
-        else {
-            var scorediv = document.createElement("div");
-            scorediv.id = "scorediv";
-            document.body.appendChild(scorediv);
-            document.getElementById("scorediv").innerHTML = xhttp.response;
         }
     }
     var reloadScore = function () {
@@ -154,5 +179,8 @@ else {?>
         xhttp.send();
         xhttp.addEventListener("load", refreshScoreboard);
     };
-    setInterval(reloadScore, 100);
+    setInterval(reloadScore, 1000);
 </script>
+</body>
+</html>
+<?php }?>

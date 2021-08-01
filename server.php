@@ -1,31 +1,40 @@
 <?php
 session_start();
-$globalvars = array();
 if (file_exists("globalvars.json")) {
     $globalvars = json_decode(file_get_contents("globalvars.json"),true);
+}
+else {
+    $globalvars = array();
 }
 if (!isset($_SESSION["pairing_code"])) {
     while (True) {
         $pairing_code = random_int(100000, 999999);
         if (isset($globalvars["pairing_codes"])) {
-            if (in_array($pairing_code, $globalvars["pairing_codes"])) {
-                //Do nothing
-            } else {
+            if (!in_array($pairing_code, $globalvars["pairing_codes"])) {
                 array_push($globalvars["pairing_codes"], $pairing_code);
                 break;
             }
-        } else {
+        }
+        else {
             $globalvars["pairing_codes"] = array();
+            if (!in_array($pairing_code, $globalvars["pairing_codes"])) {
+                array_push($globalvars["pairing_codes"], $pairing_code);
+                break;
+            }
         }
     }
 }
 else {
     $pairing_code = $_SESSION["pairing_code"];
 }
-
-$_SESSION["pairing_code"] = $pairing_code;
     if(isset($globalvars[$pairing_code])) {
         $data = $globalvars[$pairing_code];
+        if(!isset($data['team'])) {
+            $data["team"]=0;
+        }
+        if(!isset($_SESSION["servebit"])) {
+            $_SESSION["servebit"]=0;
+        }
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($_POST['t1name']!="") {
                 $data["team1"] = $_POST["t1name"];
@@ -35,24 +44,46 @@ $_SESSION["pairing_code"] = $pairing_code;
             }
             if ($_POST['team1add']=="true") {
                 $data["team1score"]++;
-            }
-            if ($_POST['team1remove']=="true") {
-                if ($data["team1score"]==0) {
-                    //Do nothing
+                if ($_SESSION["servebit"]<=1) {
+                    $_SESSION["servebit"]++;
                 }
                 else {
+                    changeteam($data);
+                    $_SESSION["servebit"]--;
+                }
+            }
+            if ($_POST['team1remove']=="true") {
+                if (!$data["team1score"]==0) {
                     $data["team1score"] = $data["team1score"] - 1;
+                    if ($_SESSION["servebit"]<=1) {
+                        $_SESSION["servebit"]--;
+                    }
+                    else {
+                        changeteam($data);
+                        $_SESSION["servebit"]++;
+                    }
                 }
             }
             if ($_POST['team2add']=="true") {
                 $data["team2score"] = $data["team2score"] + 1;
-            }
-            if ($_POST['team2remove']=="true") {
-                if ($data["team2score"]==0) {
-                    //Do nothing
+                if ($_SESSION["servebit"]<=1) {
+                    $_SESSION["servebit"]++;
                 }
                 else {
+                    changeteam($data);
+                    $_SESSION["servebit"]--;
+                }
+            }
+            if ($_POST['team2remove']=="true") {
+                if (!$data["team2score"]==0) {
                     $data["team2score"] = $data["team2score"] - 1;
+                    if ($_SESSION["servebit"]<=1) {
+                        $_SESSION["servebit"]--;
+                    }
+                    else {
+                        changeteam($data);
+                        $_SESSION["servebit"]++;
+                    }
                 }
             }
             $globalvars[$pairing_code] = $data;
@@ -67,6 +98,14 @@ $_SESSION["pairing_code"] = $pairing_code;
         $data["team1score"] = 0;
         $data["team2score"] = 0;
         $globalvars[$pairing_code] = $data;
+    }
+    function changeteam($data) {
+        if ($data["team"]==0) {
+            $data["team"]=1;
+        }
+        else {
+            $data["team"]=0;
+        }
     }
     file_put_contents("globalvars.json",json_encode($globalvars));
 ?>
