@@ -27,6 +27,8 @@ if(!isset($_SESSION["pairing_code"])) {
     $data["team1score"] = 0;
     $data["team2score"] = 0;
     $data["team"] = 0;
+    $data["team1win"] = false;
+    $data["team2win"] = false;
 }
 else {
     $pairing_code = $_SESSION["pairing_code"];
@@ -100,6 +102,14 @@ else {
             z-index: 200;
             background-color: white;
         }
+        #winnermodal {
+            text-align: center;
+            transform:translate(50%,50%);
+            position: fixed;
+            width: 50%;
+            z-index: 200;
+            background-color: white;
+        }
         #pairingcode_label {
             margin-bottom: 50px;
             font-size:32px;
@@ -145,16 +155,32 @@ else {
 
 
     <?php }?>
+<?php if($data["team1win"] or $data["team2win"]) {?>
+
+    <div id="winnermodal">
+        <h1>A player has won the game!</h1>
+        <p><?php if($data["team1win"]) {
+            echo($data["team1"]);
+        }
+        else {
+            echo($data["team2"]);
+        }?> has won the game with <?php if($data["team1win"]) {
+                echo($data["team1score"]);
+            }
+            else {
+                echo($data["team2score"]);
+            }?> points.</p>
+    </div>
+<?php }?>
 
 <?php }
-else {?>
+else {
+    echo '<audio id="announcement" src="' . $data["audiourl"] . '" autoplay="autoplay"></audio>';
+    ?>
         <div id="round_details">
         <div id="roundsummary">
             <h1 id="roundnumber">Round <?php echo $data["team1score"] + $data["team2score"] + 1?></h1>
-            <h2><?php
-                $strprefix = "team";
-                $teamno = strval($data["team"] + 1);
-                echo $data[$strprefix .= $teamno]; //Should return Team (team number)?> Serving</h2>
+            <h2><?php echo $data["team" . strval($data["team"]+1)]?> Serving</h2>
         </div>
         <div id="scorediv">
             <div id="team1">
@@ -171,7 +197,7 @@ else {?>
 <?php if(!isset($_GET["ajax"])) {?>
 <div id="round_details">
     <div id="roundsummary">
-        <h1>Round <?php echo $data["team1score"] + $data["team2score"]?></h1>
+        <h1>Round <?php echo $data["team1score"] + $data["team2score"] + 1?></h1>
         <h2><?php echo $data["team"]?> Serving</h2>
     </div>
     <div id="scorediv">
@@ -188,10 +214,8 @@ else {?>
 <script>
     function refreshScoreboard() {
         if (document.getElementById("round_details")!=undefined) {
-            if (document.getElementById("round_details").innerHTML != xhttp.response.replaceAll("\r","")) {
-                document.getElementById("round_details").innerHTML = xhttp.response.replaceAll("\r","");
-                console.log(document.getElementById("round_details").innerHTML);
-                console.log(xhttp.response);
+            if (document.getElementById("round_details").innerHTML != xhttp.response.split("\r").join("")) {
+                document.getElementById("round_details").innerHTML = xhttp.response.split("\r").join("");
             }
         }
     }
