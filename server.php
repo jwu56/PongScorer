@@ -160,14 +160,71 @@ else {
     }
     $globalvars[$pairing_code] = $GLOBALS["data"];
     file_put_contents("globalvars.json",json_encode($globalvars));
+    if ($_POST!=null) {
+        header("Location: server.php");
+    }
 ?>
 <html>
     <head>
+        <style>
+            button {
+                margin: 5px;
+                height: 120px;
+                background-color: coral;
+                border: none;
+                border-radius: 4px;
+            }
+            body {
+                width: 70%;
+                display: grid;
+                align-content: center;
+                justify-content: center;
+                align-items: center;
+                justify-items: center;
+                max-width: max-content;
+                margin: auto;
+                background-color: #80b4f0;
+            }
+            * {
+                font-size: 30px;
+                font-family: sans-serif;
+                color: white;
+                text-align: center;
+            }
+            h4 {
+                font-size: 39px;
+                margin: 10px;
+            }
+            input {
+                background-color: coral;
+                color: white;
+                border: none;
+                border-bottom: 2px solid white;
+                height: 30px;
+                width: 250px;
+            }
+            form {
+                display: inline-grid;
+                grid-template-columns: 300px 300px;
+            }
+            hr {
+                width: 100%;
+                height: 1px;
+                border: none;
+                background-color: white;
+            }
+            #reset {
+                width: 50%;
+            }
+        </style>
     </head>
     <body>
         <form id="assignmentform" action="server.php" method="post">
-            <h4>Team 1 name: </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team1"]?>" type="text" name="t1name"/>
-            <h4>Team 2 name: </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team2"]?>" type="text" name="t2name"/><br/><br/>
+            <div>
+            <h4>team 1 name </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team1"]?>" type="text" name="t1name"/></div>
+            <div>
+            <h4>team 2 name </h4><input onchange="submitform()" value="<?php echo $GLOBALS["data"]["team2"]?>" type="text" name="t2name"/><br/><br/>
+            </div><hr><hr>
             <button onclick="team1addfn()">Add 1 point to <?php echo $GLOBALS["data"]["team1"]?></button>
             <input type="hidden" id="team1add" name="team1add" value=""/>
             <button onclick="team1removefn()">Take 1 point from <?php echo $GLOBALS["data"]["team1"]?></button>
@@ -176,9 +233,9 @@ else {
             <input type="hidden" id="team2add" name="team2add" value=""/>
             <button onclick="team2removefn()">Take 1 point from <?php echo $GLOBALS["data"]["team2"]?></button>
             <input type="hidden" id="team2remove" name="team2remove" value=""/>
-            <button onclick="resetgamefn()">Reset Game</button>
             <input type="hidden" id="resetgame" name="resetgame" value=""/>
         </form>
+        <button id="reset" onclick="resetgamefn()">Reset Game</button>
     <p>Pairing Code: <?php echo $pairing_code?></p>
     </body>
     <script>
